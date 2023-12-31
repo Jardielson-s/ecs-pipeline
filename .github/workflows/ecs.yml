@@ -5,12 +5,12 @@ on:
   pull_request:
     branches: [ "main" ]
 env:
-  AWS_REGION: us-east-1
-  ECR_REPOSITORY: ecr-pipe
-  ECS_SERVICE: ecs-pipe
-  ECS_CLUSTER: ecs-cluster
-  ECS_TASK_DEFINITION: .aws/ecs-task-definition.json
-  CONTAINER_NAME: ecs-pipe
+  AWS_REGION: "us-east-1"
+  ECR_REPOSITORY: "ecr-pipe"
+  ECS_SERVICE: "ecs-pipe"
+  ECS_CLUSTER: "ecs-cluster"
+  ECS_TASK_DEFINITION: ".aws/ecs-task-definition.json"
+  CONTAINER_NAME: "ecs-pipe"
 
 jobs:
   build:
