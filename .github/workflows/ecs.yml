@@ -43,7 +43,7 @@ jobs:
         with:
           aws-access-key-id: 688761389933
           aws-secret-access-key: AKIA2AXLAYNWU67OKWMC
-          aws-region: us-east-1
+          aws-region: "us-east-1"
 
       - name: Login to Amzon ECR
         id: build-image
