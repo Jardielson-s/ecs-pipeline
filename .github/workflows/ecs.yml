@@ -1,0 +1,37 @@
+name: Deploy to AWS ECS
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+env:
+  AWS_REGION: AWS_REGION
+  ECR_REPOSITORY: ECR_REPOSITORY
+  ECS_SERVICE: ECS_SERVICE
+  ECS_CLUSTER: ECS_CLUSTER
+  ECS_TASK_DEFINITION: ECS_TASK_DEFINITION
+  CONTAINER_NAME: CONTAINER_NAME
+  ENV: NODE_ENV
+
+jobs:
+  build:
+    name: Build
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: [14.x, 16.x, 18.x]
+    steps:
+      - uses: actions/checkout@v4
+      - name: Use Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: 'npm'
+      - run: yarn build
+      - run: yarn test
+
+  deploy:
+    name: Deploy
+    runs-on: ubuntu-latest
+
+
