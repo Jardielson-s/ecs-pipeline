@@ -9,4 +9,9 @@ export class AppController {
   getHello(): string {
     return this.appService.getHello();
   }
+
+  @Get('message-random')
+  getNewMessageRandom() {
+    return `Message random: ${Math.random()}`;
+  }
 }
