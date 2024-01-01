@@ -1,16 +1,16 @@
 name: Deploy to AWS ECS
 on:
   push:
-    branches: [ "main" ]
+    branches: [ "develop" ]
   pull_request:
-    branches: [ "main" ]
+    branches: [ "develop" ]
 env:
   AWS_REGION: us-east-1
-  ECR_REPOSITORY: ecr_pipe
-  ECS_SERVICE: ecs_pipe
-  ECS_CLUSTER: ecs_pipe
-  ECS_TASK_DEFINITION: .aws/ecs-task-definition.json
-  CONTAINER_NAME: ecr_pipe
+  ECR_REPOSITORY: ecr
+  ECS_SERVICE: ecs
+  ECS_CLUSTER: ecs
+  CONTAINER_NAME: ecr
+  ENV_DEV: dev
 
 jobs:
   build:
@@ -54,26 +54,32 @@ jobs:
         env:
           ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
           IMAGE_TAG: ${{ github.sha }}
+          ENV: ${{env.ENV_DEV}}
         run: |
           # Build a docker container and
           # push it ECR so that it can
           # be deployed to ECS
-          docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG .
-          docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
-          echo "image=$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG" >> $GITHUB_OUTPUT
+          docker build -t $ECR_REGISTRY/$ECR_REPOSITORY_$ENV:$IMAGE_TAG .
+          docker push $ECR_REGISTRY/$ECR_REPOSITORY_$ENV:$IMAGE_TAG
+          echo "image=$ECR_REGISTRY/$ECR_REPOSITORY_$ENV:$IMAGE_TAG" >> $GITHUB_OUTPUT
+
+      - name: Download task definition
+        run: |
+          aws ecs describe-task-definition --task-definition service \
+          --query taskDefinition > task-definition.json
 
       - name: Fill in the new image ID in the Amazon ECS task definition
         id: task-def
         uses: aws-actions/amazon-ecs-render-task-definition@v1
         with:
-          task-definition: ${{env.ECS_TASK_DEFINITION}}
-          container-name: ${{env.CONTAINER_NAME}}
+          task-definition: task-definition.json
+          container-name: ${{env.CONTAINER_NAME}}_${{env.ENV_DEV}}
           image: ${{ steps.build-image.outputs.image }}
 
       - name: Deploy Amazon ECS task definition
         uses: aws-actions/amazon-ecs-deploy-task-definition@v1
         with:
           task-definition: ${{ steps.task-def.outputs.task-definition }}
-          service: ${{ env.ECS_SERVICE }}
-          cluster: ${{ env.ECS_CLUSTER }}
+          service: ${{ env.ECS_SERVICE }}_${{env.ENV_DEV}}
+          cluster: ${{ env.ECS_CLUSTER }}_${{env.ENV_DEV}}
           wait-for-service-stability: true
