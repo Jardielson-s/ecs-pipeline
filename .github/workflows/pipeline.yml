@@ -8,7 +8,7 @@ env:
   AWS_REGION: us-east-1
   ECR_REPOSITORY: ecr
   ECS_SERVICE: ecs
-  ECS_CLUSTER: ecs
+  ECS_CLUSTER: cluster
   CONTAINER_NAME: ecr
   ENV_DEV: dev
   UNDERLINE: _

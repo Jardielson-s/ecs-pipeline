@@ -21,7 +21,7 @@ provider "aws" {
 
 variable "ecr_name" {
   type        = string
-  default     = "erc_dev"
+  default     = "ecr_dev"
   description = "This is ecr repository name"
 }
 
@@ -153,6 +153,6 @@ resource "aws_ecs_service" "service" {
 }
 
 resource "aws_ecr_repository" "repository" {
-  name    = var.ecr_name
+  name                 = var.ecr_name
   image_tag_mutability = "MUTABLE"
 }
