@@ -21,7 +21,7 @@ provider "aws" {
 
 variable "ecr_name" {
   type        = string
-  default     = "erc_pipe_dev"
+  default     = "erc_dev"
   description = "This is ecr repository name"
 }
 
