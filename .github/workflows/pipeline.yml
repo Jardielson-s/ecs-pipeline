@@ -9,7 +9,7 @@ env:
   ECR_REPOSITORY: ecr
   ECS_SERVICE: ecs
   ECS_CLUSTER: cluster
-  CONTAINER_NAME: ecr
+  CONTAINER_NAME: ecs
   ENV_DEV: dev
   UNDERLINE: _
 
