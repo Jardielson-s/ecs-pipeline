@@ -6,11 +6,11 @@ on:
     branches: [ "main" ]
 env:
   AWS_REGION: us-east-1
-  ECR_REPOSITORY: ecr-pipe
-  ECS_SERVICE: ecs-pipe
-  ECS_CLUSTER: ecs-cluster
+  ECR_REPOSITORY: ecr_pipe
+  ECS_SERVICE: ecs_pipe
+  ECS_CLUSTER: ecs_cluster
   ECS_TASK_DEFINITION: .aws/ecs-task-definition.json
-  CONTAINER_NAME: ecs-pipe
+  CONTAINER_NAME: ecs_pipe
 
 jobs:
   build:
@@ -48,8 +48,8 @@ jobs:
       - name: Login to Amzon ECR
         id: build-image
         env:
-          ECR_REGISTRY: ${{steps.login-ecr.outputs.registry}}
-          IMAGE_TAG: ${{github.sha}}
+          ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+          IMAGE_TAG: ${{ github.sha }}
         run: |
           # Build a docker container and
           # push it ECR so that it can
