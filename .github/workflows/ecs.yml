@@ -8,9 +8,9 @@ env:
   AWS_REGION: us-east-1
   ECR_REPOSITORY: ecr_pipe
   ECS_SERVICE: ecs_pipe
-  ECS_CLUSTER: ecs_cluster
+  ECS_CLUSTER: ecs_pipe
   ECS_TASK_DEFINITION: .aws/ecs-task-definition.json
-  CONTAINER_NAME: ecs_pipe
+  CONTAINER_NAME: ecr_pipe
 
 jobs:
   build:
