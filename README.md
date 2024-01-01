@@ -9,7 +9,7 @@ This is an application to demonstrate pipeline construction with ecr and githuba
 
 ## Architecture
 
-![img](https://raw.githubusercontent.com/Jardielson-s/ecr-pipeline/2b4bffcc0ca3c886739ee8fa6ae468fcd6f5861f/images/devops.drawio.svg)
+![img](https://raw.githubusercontent.com/Jardielson-s/ecs-pipeline/f2765d2e1bef15595005be17f1762120b18b3deb/images/devops.drawio.svg?token=AOGJ7CPO32SRVYYJOV3TCSLFSL7GY)
 
 ## Installation
 
