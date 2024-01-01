@@ -11,6 +11,7 @@ env:
   ECS_CLUSTER: ecs
   CONTAINER_NAME: ecr
   ENV_DEV: dev
+  UNDERLINE: _
 
 jobs:
   build:
@@ -58,9 +59,9 @@ jobs:
           # Build a docker container and
           # push it ECR so that it can
           # be deployed to ECS
-          docker build -t $ECR_REGISTRY/$ECR_REPOSITORY$_$ENV_DEV:$IMAGE_TAG .
-          docker push $ECR_REGISTRY/$ECR_REPOSITORY$_$ENV_DEV:$IMAGE_TAG
-          echo "image=$ECR_REGISTRY/$ECR_REPOSITORY$_$ENV_DEV:$IMAGE_TAG" >> $GITHUB_OUTPUT
+          docker build -t $ECR_REGISTRY/$ECR_REPOSITORY$UNDERLINE$ENV_DEV:$IMAGE_TAG .
+          docker push $ECR_REGISTRY/$ECR_REPOSITORY$UNDERLINE$ENV_DEV:$IMAGE_TAG
+          echo "image=$ECR_REGISTRY/$ECR_REPOSITORY$UNDERLINE$ENV_DEV:$IMAGE_TAG" >> $GITHUB_OUTPUT
 
       - name: Download task definition
         run: |
