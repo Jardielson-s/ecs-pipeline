@@ -54,10 +54,9 @@ jobs:
           # Build a docker container and
           # push it ECR so that it can
           # be deployed to ECS
-          echo "image=$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG" >> $GITHUB_OUTPUT
-          docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG .
-          docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
-          echo "image=$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG" >> $GITHUB_OUTPUT
+          docker build -t ${{ env.REGISTRY || "docker.io" }}:$IMAGE_TAG .
+          docker push ${{ env.REGISTRY || "docker.io" }}:$IMAGE_TAG
+          echo "image=${{ env.REGISTRY || "docker.io" }}:$IMAGE_TAG" >> $GITHUB_OUTPUT
 
       - name: Fill in the new image ID in the Amazon ECS task definition
         id: task-def
