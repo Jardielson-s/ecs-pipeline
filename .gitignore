@@ -36,3 +36,7 @@ lerna-debug.log*
 
 .env
 services
+/terraform/dev/.terraform
+/terraform/dev/.terraform.lock.hcl
+/terraform/dev/terraform.tfstate
+/terraform/dev/terraform.tfstate.backup
