@@ -33,7 +33,7 @@ variable "ecs_name" {
 
 variable "image_name" {
   type        = string
-  default     = "image_dev"
+  default     = "ecr_dev"
   description = "This is ecs cluster and service name"
 }
 
@@ -79,7 +79,32 @@ variable "task_role_dev" {
   description = "This is a new role"
 }
 
+data "aws_iam_policy_document" "taskpolicy" {
+  statement {
+    effect    = "Allow"
+    resources = ["*"]
+    actions = [
+      "ecr:GetAuthorizationToken",
+      "ecr:GetDownloadUrlForLayer",
+      "ecr:BatchGetImage",
+      "ecr:BatchCheckLayerAvailability",
+      "ecr:PutImage",
+      "ecr:InitiateLayerUpload",
+      "ecr:UploadLayerPart",
+      "ecr:CompleteLayerUpload",
+      "ecr:DescribeRepositories",
+      "ecr:GetRepositoryPolicy",
+      "ecr:ListImages",
+      "ecr:DeleteRepository",
+      "ecr:BatchDeleteImage",
+      "ecr:SetRepositoryPolicy",
+      "ecr:DeleteRepositoryPolicy",
+    ]
+  }
+}
+
 resource "aws_iam_role" "task_role" {
+
   name = var.task_role_dev
   assume_role_policy = jsonencode({
     "Version" : "2012-10-17",
@@ -94,6 +119,11 @@ resource "aws_iam_role" "task_role" {
       }
     ]
   })
+
+  inline_policy {
+    name   = "EcsTaskExecutionPolicy"
+    policy = data.aws_iam_policy_document.taskpolicy.json
+  }
 }
 
 data "aws_iam_role" "ecs_task_execution_role" {
