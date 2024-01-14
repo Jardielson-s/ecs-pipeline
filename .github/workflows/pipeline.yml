@@ -51,8 +51,12 @@ jobs:
           # export credentials 
           export AWS_ACCESS_KEY_ID=${{ secrets.AWS_ACCESS_KEY_ID }}
           export AWS_SECRET_ACCESS_KEY=${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          # Access terraform paste
+          cd terraform/dev/
+          # Terraform init
+          terraform init
           # Apply terraform
-          terraform apply
+          terraform apply -auto-approve
       
       - name: Login to Amazon ECR
         id: login-ecr
