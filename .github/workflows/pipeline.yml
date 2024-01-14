@@ -54,9 +54,9 @@ jobs:
           # Access terraform paste
           cd terraform/dev/
           # Terraform init
-          terraform init
+          # terraform init
           # Apply terraform
-          terraform apply -auto-approve
+          terraform destroy -auto-approve
       
       - name: Login to Amazon ECR
         id: login-ecr
