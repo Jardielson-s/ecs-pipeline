@@ -53,9 +53,9 @@ jobs:
           export AWS_SECRET_ACCESS_KEY=${{ secrets.AWS_SECRET_ACCESS_KEY }}
           # Access terraform paste
           cd terraform/
-          # Terraform validate and init
+          # Terraform  init and validate
+          terraform init -backend-config="backend-dev.conf" --var-file="dev.tfvars"          terraform validate
           terraform validate
-          terraform init -backend-config="backend-dev.conf" --var-file="dev.tfvars"
           # Apply terraform
           terraform apply --var-file="dev.tfvars" -auto-approve
       
