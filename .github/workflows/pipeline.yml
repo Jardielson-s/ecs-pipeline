@@ -47,57 +47,57 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ${{ env.AWS_REGION }}
         
-      - name: Build aws infrastructure
-        run: |
-          # export credentials 
-          export AWS_ACCESS_KEY_ID=${{ secrets.AWS_ACCESS_KEY_ID }}
-          export AWS_SECRET_ACCESS_KEY=${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          # Access terraform paste
-          cd terraform/
-          # Terraform  init and validate
-          terraform init -backend-config="backend-dev.conf" --var-file="dev.tfvars"          
-          terraform validate
-          terraform validate
-          # Apply terraform
-          terraform apply --var-file="dev.tfvars" -auto-approve
+      # - name: Build aws infrastructure
+      #   run: |
+      #     # export credentials 
+      #     export AWS_ACCESS_KEY_ID=${{ secrets.AWS_ACCESS_KEY_ID }}
+      #     export AWS_SECRET_ACCESS_KEY=${{ secrets.AWS_SECRET_ACCESS_KEY }}
+      #     # Access terraform paste
+      #     cd terraform/
+      #     # Terraform  init and validate
+      #     terraform init -backend-config="backend-dev.conf" --var-file="dev.tfvars"          
+      #     terraform validate
+      #     terraform validate
+      #     # Apply terraform
+      #     terraform apply --var-file="dev.tfvars" -auto-approve
       
-      - name: Login to Amazon ECR
-        id: login-ecr
-        uses: aws-actions/amazon-ecr-login@62f4f872db3836360b72999f4b87f1ff13310f3a
+      # - name: Login to Amazon ECR
+      #   id: login-ecr
+      #   uses: aws-actions/amazon-ecr-login@62f4f872db3836360b72999f4b87f1ff13310f3a
         
-      - name: Build, tag, and push image to Amazon ECR
-        id: build-image
-        env:
-          ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
-          IMAGE_TAG: ${{ github.sha }}
-        run: |
-          # Build a docker container and
-          # push it ECR so that it can
-          # be deployed to ECS
-          docker build -t $ECR_REGISTRY/$ECR_REPOSITORY$UNDERLINE$ENV_DEV:$IMAGE_TAG .
-          docker push $ECR_REGISTRY/$ECR_REPOSITORY$UNDERLINE$ENV_DEV:$IMAGE_TAG
-          echo "image=$ECR_REGISTRY/$ECR_REPOSITORY$UNDERLINE$ENV_DEV:$IMAGE_TAG" >> $GITHUB_OUTPUT
+      # - name: Build, tag, and push image to Amazon ECR
+      #   id: build-image
+      #   env:
+      #     ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+      #     IMAGE_TAG: ${{ github.sha }}
+      #   run: |
+      #     # Build a docker container and
+      #     # push it ECR so that it can
+      #     # be deployed to ECS
+      #     docker build -t $ECR_REGISTRY/$ECR_REPOSITORY$UNDERLINE$ENV_DEV:$IMAGE_TAG .
+      #     docker push $ECR_REGISTRY/$ECR_REPOSITORY$UNDERLINE$ENV_DEV:$IMAGE_TAG
+      #     echo "image=$ECR_REGISTRY/$ECR_REPOSITORY$UNDERLINE$ENV_DEV:$IMAGE_TAG" >> $GITHUB_OUTPUT
 
-      - name: Download task definition
-        run: |
-          aws ecs describe-task-definition --task-definition service \
-          --query taskDefinition > task-definition.json
+      # - name: Download task definition
+      #   run: |
+      #     aws ecs describe-task-definition --task-definition service \
+      #     --query taskDefinition > task-definition.json
 
-      - name: Fill in the new image ID in the Amazon ECS task definition
-        id: task-def
-        uses: aws-actions/amazon-ecs-render-task-definition@v1
-        with:
-          task-definition: task-definition.json
-          container-name: ${{env.CONTAINER_NAME}}_${{env.ENV_DEV}}
-          image: ${{ steps.build-image.outputs.image }}
+      # - name: Fill in the new image ID in the Amazon ECS task definition
+      #   id: task-def
+      #   uses: aws-actions/amazon-ecs-render-task-definition@v1
+      #   with:
+      #     task-definition: task-definition.json
+      #     container-name: ${{env.CONTAINER_NAME}}_${{env.ENV_DEV}}
+      #     image: ${{ steps.build-image.outputs.image }}
 
-      - name: Deploy Amazon ECS task definition
-        uses: aws-actions/amazon-ecs-deploy-task-definition@v1
-        with:
-          task-definition: ${{ steps.task-def.outputs.task-definition }}
-          service: ${{ env.ECS_SERVICE }}_${{env.ENV_DEV}}
-          cluster: ${{ env.ECS_CLUSTER }}_${{env.ENV_DEV}}
-          wait-for-service-stability: true
+      # - name: Deploy Amazon ECS task definition
+      #   uses: aws-actions/amazon-ecs-deploy-task-definition@v1
+      #   with:
+      #     task-definition: ${{ steps.task-def.outputs.task-definition }}
+      #     service: ${{ env.ECS_SERVICE }}_${{env.ENV_DEV}}
+      #     cluster: ${{ env.ECS_CLUSTER }}_${{env.ENV_DEV}}
+      #     wait-for-service-stability: true
     
   deploy-to-stg:
     name: Deploy develop
@@ -107,18 +107,18 @@ jobs:
       name: deploy stage
       url: ${{ steps.create_release.outputs.html_url }}
 
-    steps:
-      - name: Check out repository code
-        uses: actions/checkout@v2
-      - name: pull-request
-        uses: repo-sync/pull-request@v2
-        with:
-          destination_branch: "stg"
-          github_token: ${{ secrets.TOKEN_GITHUB }}
-          pr_label: "feature, automated pr"
-          pr_title: "Pr to stg branch"
-      - name: Deploy is Running
-        run: |
-          echo "todo completed deploy to stg"
-          exit 1
+    # steps:
+    #   - name: Check out repository code
+    #     uses: actions/checkout@v2
+    #   - name: pull-request
+    #     uses: repo-sync/pull-request@v2
+    #     with:
+    #       destination_branch: "stg"
+    #       github_token: ${{ secrets.TOKEN_GITHUB }}
+    #       pr_label: "feature, automated pr"
+    #       pr_title: "Pr to stg branch"
+    #   - name: Deploy is Running
+    #     run: |
+    #       echo "todo completed deploy to stg"
+    #       exit 1
     
