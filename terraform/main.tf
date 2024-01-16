@@ -5,62 +5,14 @@ terraform {
       version = "~> 4.16"
     }
   }
+  backend "s3" {}
 
   required_version = ">= 1.2.0"
-}
-
-variable "region" {
-  type        = string
-  default     = "us-east-1"
-  description = "This ia default region"
 }
 
 provider "aws" {
   region = var.region
 }
-
-variable "ecr_name" {
-  type        = string
-  default     = "ecr_dev"
-  description = "This is ecr repository name"
-}
-
-variable "ecs_name" {
-  type        = string
-  default     = "ecs_dev"
-  description = "This is ecs cluster and service name"
-}
-
-variable "image_name" {
-  type        = string
-  default     = "ecr_dev"
-  description = "This is ecs cluster and service name"
-}
-
-variable "cluster_name" {
-  type        = string
-  default     = "cluster_dev"
-  description = "This is ecs cluster and service name"
-}
-
-variable "task_definition" {
-  type        = string
-  default     = "task_definition"
-  description = "This is task for ecs service"
-}
-
-variable "vpc_id" {
-  type        = string
-  default     = "vpc-019808c69cbf98c8e"
-  description = "This is a default vpc"
-}
-
-variable "subnet" {
-  type        = string
-  default     = "subnet-05b663ebb4e83be21"
-  description = "This is a default vpc"
-}
-
 
 data "aws_vpc" "default_vpc" {
   default = true
@@ -71,12 +23,6 @@ data "aws_subnet" "subnets" {
   for_each          = toset(["us-east-1a", "us-east-1b", "us-east-1c", "us-east-1d", "us-east-1e", "us-east-1f"])
   vpc_id            = data.aws_vpc.default_vpc.id
   availability_zone = each.value
-}
-
-variable "task_role_dev" {
-  type        = string
-  default     = "task_role_dev"
-  description = "This is a new role"
 }
 
 data "aws_iam_policy_document" "taskpolicy" {

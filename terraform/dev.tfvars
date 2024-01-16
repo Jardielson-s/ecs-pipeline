@@ -1,0 +1,10 @@
+region          = "us-east-1"
+ecr_name        = "ecr_dev"
+ecs_name        = "ecs_dev"
+image_name      = "ecr_dev"
+cluster_name    = "cluster_dev"
+task_definition = "task_definition"
+vpc_id          = "vpc-019808c69cbf98c8e"
+subnet          = "subnet-05b663ebb4e83be21"
+task_role_dev   = "task_role_dev"
+ 
