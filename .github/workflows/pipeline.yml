@@ -1,7 +1,10 @@
 name: Deploy to AWS ECS
 on:
-  pull_request:
+  push:
     branches: [ "develop" ]
+  check_run:
+    types: [completed]
+
 env:
   AWS_REGION: us-east-1
   ECR_REPOSITORY: ecr
