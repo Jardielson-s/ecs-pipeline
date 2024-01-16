@@ -15,6 +15,8 @@ This is an application to demonstrate pipeline construction with ecr and githuba
 
 ```bash
 $ yarn install
+# or
+$ yarn
 ```
 
 ## Running the app
