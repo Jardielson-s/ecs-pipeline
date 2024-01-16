@@ -32,7 +32,7 @@ jobs:
       - run: yarn build
       - run: yarn test
 
-  deploy:
+  deploy-to-dev:
     name: Deploy develop
     runs-on: ubuntu-latest
     needs: [build]
@@ -98,3 +98,27 @@ jobs:
           service: ${{ env.ECS_SERVICE }}_${{env.ENV_DEV}}
           cluster: ${{ env.ECS_CLUSTER }}_${{env.ENV_DEV}}
           wait-for-service-stability: true
+    
+  deploy-to-stg:
+    name: Deploy develop
+    runs-on: ubuntu-latest
+    needs: [build, deploy-to-dev]
+    environment:
+      name: deploy stage
+      url: ${{ steps.create_release.outputs.html_url }}
+
+    steps:
+      - name: Check out repository code
+        uses: actions/checkout@v2
+      - name: pull-request
+        uses: repo-sync/pull-request@v2
+        with:
+          destination_branch: "stg"
+          github_token: ${{ secrets.TOKEN_GITHUB }}
+          pr_label: "feature, automated pr"
+          pr_title: "Pr to stg branch"
+      - name: Deploy is Running
+        run: |
+          echo "todo completed deploy to stg"
+          exit 1
+    
